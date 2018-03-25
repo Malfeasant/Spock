@@ -22,6 +22,7 @@ public enum MultiLogic {
 		}
 		@Override
 		public MultiLogic resolve(MultiLogic that) {
+			that = noNull(that);
 			return that == U ? that : this;
 		}
 	},
@@ -32,6 +33,7 @@ public enum MultiLogic {
 		}
 		@Override
 		public MultiLogic resolve(MultiLogic that) {
+			that = noNull(that);
 			switch (that) {
 			case U:
 			case X:
@@ -54,6 +56,7 @@ public enum MultiLogic {
 		}
 		@Override
 		public MultiLogic resolve(MultiLogic that) {
+			that = noNull(that);
 			switch (that) {
 			case U:
 			case X:
@@ -76,7 +79,7 @@ public enum MultiLogic {
 		}
 		@Override
 		public MultiLogic resolve(MultiLogic that) {
-			return that;
+			return noNull(that);
 		}
 	},
 	W {
@@ -86,6 +89,7 @@ public enum MultiLogic {
 		}
 		@Override
 		public MultiLogic resolve(MultiLogic that) {
+			that = noNull(that);
 			switch (that) {
 			case Z:
 			case L:
@@ -103,6 +107,7 @@ public enum MultiLogic {
 		}
 		@Override
 		public MultiLogic resolve(MultiLogic that) {
+			that = noNull(that);
 			switch (that) {
 			case Z:
 				return this;
@@ -124,6 +129,7 @@ public enum MultiLogic {
 		}
 		@Override
 		public MultiLogic resolve(MultiLogic that) {
+			that = noNull(that);
 			switch (that) {
 			case Z:
 				return this;
@@ -144,4 +150,8 @@ public enum MultiLogic {
 	}
 	
 	public abstract MultiLogic resolve(MultiLogic that);
+	
+	private static MultiLogic noNull(MultiLogic that) {
+		return that == null ? U : that;
+	}
 }
