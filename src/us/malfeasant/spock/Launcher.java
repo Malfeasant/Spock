@@ -3,7 +3,6 @@ package us.malfeasant.spock;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -20,8 +19,7 @@ public class Launcher extends Application {
 		VBox buttons = new VBox(startNew, open);
 		VBox.setVgrow(open, Priority.ALWAYS);
 		VBox.setVgrow(startNew, Priority.ALWAYS);
-		BorderPane root = new BorderPane(buttons);
-		Scene scene = new Scene(root);
+		Scene scene = new Scene(buttons);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
