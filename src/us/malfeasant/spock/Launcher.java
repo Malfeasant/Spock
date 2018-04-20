@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 public class Launcher extends Application {
 	@Override
 	public void start(Stage primaryStage) {
+		// TODO: Read command line arguments to determine whether to start a new design, open existing, present a dialog...
+		// maybe have a configurable default?  For now, we present buttons for new or existing.  
 		Button startNew = new Button("New Design");
 		startNew.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		startNew.setPrefHeight(50);
