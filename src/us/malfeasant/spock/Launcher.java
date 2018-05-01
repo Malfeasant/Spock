@@ -24,7 +24,7 @@ public class Launcher extends Application {
 */
 		// But for now, we'll just start a new design
 		Editor e = new Editor();
-		Scene scene = new Scene(null);	// TODO	Get something from Editor...
+		Scene scene = new Scene(e.getParent());
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
