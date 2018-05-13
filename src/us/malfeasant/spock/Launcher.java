@@ -3,7 +3,7 @@ package us.malfeasant.spock;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import us.malfeasant.spock.editor.Editor;
+import us.malfeasant.spock.editor.EditorView;
 
 public class Launcher extends Application {
 	@Override
@@ -23,7 +23,7 @@ public class Launcher extends Application {
 		Scene scene = new Scene(buttons);
 */
 		// But for now, we'll just start a new design
-		Editor e = new Editor();
+		EditorView e = new EditorView();
 		Scene scene = new Scene(e.getParent());
 		primaryStage.setScene(scene);
 		primaryStage.show();
