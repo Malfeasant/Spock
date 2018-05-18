@@ -1,5 +1,7 @@
 package us.malfeasant.spock.ui;
 
+import java.util.Optional;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,7 +26,7 @@ public class MainWindow {
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {
-				if (!showQuitDialog()) {
+				if (!checkQuit()) {
 					event.consume();
 				}
 			}
@@ -44,7 +46,7 @@ public class MainWindow {
 		itemExit.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if (showQuitDialog()) {
+				if (checkQuit()) {
 					Platform.exit();
 				}
 			}
@@ -54,30 +56,38 @@ public class MainWindow {
 		return new MenuBar(fileMenu);
 	}
 	
-	private boolean changed = true;	// TODO: track whether design has been changed since last save- in this class or design class?
+	/**
+	 * @return true if ok to close, false if dialog was cancelled or there was a problem saving file...
+	 */
+	private boolean checkQuit() {
+		boolean changed = true;	// TODO: track whether design has been changed since last save- in this class or design class?
+		if (changed) {
+			return showQuitDialog();
+		}
+		return !changed;
+	}
 	/**
 	 * @return true if ok to close, false if dialog was cancelled or there was a problem saving file...
 	 */
 	private boolean showQuitDialog() {
-		if (changed) {
-			ButtonType yes = ButtonType.YES;
-			ButtonType no = ButtonType.NO;
-			ButtonType cancel = ButtonType.CANCEL;
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Design has changed, save it?");
-			alert.getButtonTypes().setAll(yes, no, cancel);
-			alert.showAndWait().ifPresent(response -> {
-				if (response == ButtonType.YES) {
-					// TODO: save dialog- assuming success, 
-					changed = false;
-				} else if (response == ButtonType.NO) {
-					// go ahead and exit
-					changed = false;
-				} else {
-					
-				}
-			});
+		boolean allowClose = false;
+		ButtonType yes = ButtonType.YES;
+		ButtonType no = ButtonType.NO;
+		ButtonType cancel = ButtonType.CANCEL;
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Design has changed, save it?");
+		alert.getButtonTypes().setAll(yes, no, cancel);
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.isPresent()) {
+			if (result.get() == ButtonType.YES) {
+				// TODO: save dialog- assuming success, 
+				allowClose = true;
+			} else if (result.get() == ButtonType.NO) {
+				// go ahead and exit... 
+				allowClose = true;
+			} else {
+				// cancel, window was closed, something unexpected... nothing to do?
+			}
 		}
-		
-		return !changed;
+		return allowClose;
 	}
 }
