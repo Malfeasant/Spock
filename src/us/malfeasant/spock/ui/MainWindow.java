@@ -1,11 +1,15 @@
 package us.malfeasant.spock.ui;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -20,7 +24,9 @@ public class MainWindow {
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {
-				showQuitDialog();	// TODO: make use of return
+				if (!showQuitDialog()) {
+					event.consume();
+				}
 			}
 		});
 		VBox top = new VBox(makeMenu());	// TODO: add toolbar
@@ -38,7 +44,9 @@ public class MainWindow {
 		itemExit.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				showQuitDialog();	// TODO: make use of return
+				if (showQuitDialog()) {
+					Platform.exit();
+				}
 			}
 		});
 		Menu fileMenu = new Menu("File", null, itemNew, itemOpen, itemExit);
@@ -46,10 +54,30 @@ public class MainWindow {
 		return new MenuBar(fileMenu);
 	}
 	
+	private boolean changed = true;	// TODO: track whether design has been changed since last save- in this class or design class?
 	/**
 	 * @return true if ok to close, false if dialog was cancelled or there was a problem saving file...
 	 */
 	private boolean showQuitDialog() {
-		return true;
+		if (changed) {
+			ButtonType yes = ButtonType.YES;
+			ButtonType no = ButtonType.NO;
+			ButtonType cancel = ButtonType.CANCEL;
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Design has changed, save it?");
+			alert.getButtonTypes().setAll(yes, no, cancel);
+			alert.showAndWait().ifPresent(response -> {
+				if (response == ButtonType.YES) {
+					// TODO: save dialog- assuming success, 
+					changed = false;
+				} else if (response == ButtonType.NO) {
+					// go ahead and exit
+					changed = false;
+				} else {
+					
+				}
+			});
+		}
+		
+		return !changed;
 	}
 }
