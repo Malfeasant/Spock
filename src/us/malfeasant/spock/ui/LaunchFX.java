@@ -1,8 +1,7 @@
-package us.malfeasant.spock;
+package us.malfeasant.spock.ui;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import us.malfeasant.spock.ui.MainWindow;
 
 public class LaunchFX extends Application {
 	
