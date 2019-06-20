@@ -2,7 +2,6 @@ package us.malfeasant.spock.ui;
 
 import java.util.Optional;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -21,13 +20,13 @@ public class MainWindow {
 	private final Stage stage;
 	private final BorderPane pane;
 	
-	public MainWindow(Stage primaryStage, Object design) {	// TODO: more specific than Object
+	public MainWindow(Stage primaryStage, CircuitLayout layout) {
 		stage = primaryStage;
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {
-				if (!checkQuit()) {
-					event.consume();
+				if (!allowClose()) {
+					event.consume();	// Save failed or user cancelled, eat the event
 				}
 			}
 		});
@@ -46,8 +45,8 @@ public class MainWindow {
 		itemExit.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if (checkQuit()) {
-					Platform.exit();
+				if (allowClose()) {
+					stage.hide();	// Should exit the app if all windows have closed...
 				}
 			}
 		});
@@ -59,33 +58,25 @@ public class MainWindow {
 	/**
 	 * @return true if ok to close, false if dialog was cancelled or there was a problem saving file...
 	 */
-	private boolean checkQuit() {
-		boolean changed = true;	// TODO: track whether design has been changed since last save- in this class or design class?
-		if (changed) {
-			return showQuitDialog();
-		}
-		return !changed;
-	}
-	/**
-	 * @return true if ok to close, false if dialog was cancelled or there was a problem saving file...
-	 */
-	private boolean showQuitDialog() {
-		boolean allowClose = false;
-		ButtonType yes = ButtonType.YES;
-		ButtonType no = ButtonType.NO;
-		ButtonType cancel = ButtonType.CANCEL;
-		Alert alert = new Alert(AlertType.CONFIRMATION, "Design has changed, save it?");
-		alert.getButtonTypes().setAll(yes, no, cancel);
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.isPresent()) {
-			if (result.get() == ButtonType.YES) {
-				// TODO: save dialog- assuming success, 
-				allowClose = true;
-			} else if (result.get() == ButtonType.NO) {
-				// go ahead and exit... 
-				allowClose = true;
-			} else {
-				// cancel, window was closed, something unexpected... nothing to do?
+	private boolean allowClose() {
+		boolean allowClose = false;	// TODO: track whether design has been changed since last save- in this class or design class?
+		if (!allowClose) {
+			ButtonType yes = ButtonType.YES;
+			ButtonType no = ButtonType.NO;
+			ButtonType cancel = ButtonType.CANCEL;
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Design has changed, save it?");
+			alert.getButtonTypes().setAll(yes, no, cancel);
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.isPresent()) {
+				if (result.get() == ButtonType.YES) {
+					// TODO: show save dialog- assuming success, 
+					allowClose = true;
+				} else if (result.get() == ButtonType.NO) {
+					// go ahead and exit... 
+					allowClose = true;
+				} else {
+					// cancel, window was closed, something unexpected... nothing to do? allowClose is still false at this point
+				}
 			}
 		}
 		return allowClose;
