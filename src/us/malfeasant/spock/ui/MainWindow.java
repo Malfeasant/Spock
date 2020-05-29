@@ -32,7 +32,7 @@ public class MainWindow {
 		});
 		VBox top = new VBox(makeMenu());	// TODO: add toolbar
 //		pane = new BorderPane(center, top, right, bottom, left);
-		pane = new BorderPane(null, top, null, null, null);
+		pane = new BorderPane(layout, top, null, null, null);
 		
 		stage.setScene(new Scene(pane));
 		stage.show();
