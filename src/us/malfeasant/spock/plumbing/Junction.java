@@ -9,7 +9,7 @@ public class Junction implements LogicListener {
 	
 	@Override
 	public void update(Output source, MultiLogic value) {
-		if (value.equals(outputs.put(source, value))) {
+		if (!value.equals(outputs.put(source, value))) {	// put returns previous mapping- only invalidate if it's different from new value
 			invalidate();	// signify value has changed
 		}	// else input didn't change
 	}

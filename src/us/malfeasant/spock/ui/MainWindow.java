@@ -2,8 +2,6 @@ package us.malfeasant.spock.ui;
 
 import java.util.Optional;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
@@ -14,7 +12,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class MainWindow {
 	private final Stage stage;
@@ -22,12 +19,9 @@ public class MainWindow {
 	
 	public MainWindow(Stage primaryStage, CircuitLayout layout) {
 		stage = primaryStage;
-		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			@Override
-			public void handle(WindowEvent event) {
-				if (!allowClose()) {
-					event.consume();	// Save failed or user cancelled, eat the event
-				}
+		stage.setOnCloseRequest(event -> {
+			if (!allowClose()) {
+				event.consume();	// Save failed or user cancelled, eat the event
 			}
 		});
 		VBox top = new VBox(makeMenu());	// TODO: add toolbar
@@ -42,12 +36,9 @@ public class MainWindow {
 		MenuItem itemNew = new MenuItem("New");
 		MenuItem itemOpen = new MenuItem("Open");
 		MenuItem itemExit = new MenuItem("Exit");
-		itemExit.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (allowClose()) {
-					stage.hide();	// Should exit the app if all windows have closed...
-				}
+		itemExit.setOnAction(event -> {
+			if (allowClose()) {
+				stage.hide();	// Should exit the app if all windows have closed...
 			}
 		});
 		Menu fileMenu = new Menu("File", null, itemNew, itemOpen, itemExit);
